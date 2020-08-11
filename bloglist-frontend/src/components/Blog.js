@@ -1,10 +1,32 @@
 import React, {useState} from 'react'
 
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>
-)
+const Blog = ({ blog }) => {
+  const [fullView, setFullView] = useState(false)
+
+  const handleFullViewChange = async (event) => {
+    event.preventDefault()
+    if (fullView === false) {
+      setFullView(true)
+    } else {
+      setFullView(false)
+    }
+  }
+  if (fullView === false) {
+    return (
+      <div>
+        {blog.title} {blog.author} <button onClick={handleFullViewChange}>view</button>
+      </div>
+    )
+  }
+  return (
+    <div>
+      <p>{blog.title} <button onClick={handleFullViewChange}>hide</button></p>
+      <p>{blog.url}</p>
+      <p>likes {blog.likes} <button>like</button></p>
+      <p>{blog.author}</p>
+    </div>
+  )
+}
 
 /*const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
