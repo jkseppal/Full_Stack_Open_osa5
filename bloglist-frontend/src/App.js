@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import BlogForm from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -117,7 +118,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      {/*<h2>create new</h2>
+      <h2>create new</h2>
       <form onSubmit={handleCreate}>
         <div>
           title:
@@ -147,7 +148,7 @@ const App = () => {
           />
         </div>
         <button type="submit">create</button>
-      </form>*/}
+      </form>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
