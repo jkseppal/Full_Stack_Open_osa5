@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [fullView, setFullView] = useState(false)
@@ -11,6 +12,22 @@ const Blog = ({ blog }) => {
       setFullView(false)
     }
   }
+
+  const handleLike = async (event) => {
+    event.preventDefault()
+    const likedBlog = {
+      url: blog.url,
+      title: blog.title,
+      author: blog.author,
+      user: blog.user,
+      likes: (blog.likes + 1),
+      id: blog.id
+    }
+    blogService.update(blog.id, likedBlog)
+    window.location.reload()
+    (false)
+  }
+
   if (fullView === false) {
     return (
       <div>
@@ -20,10 +37,10 @@ const Blog = ({ blog }) => {
   }
   return (
     <div>
-      <p>{blog.title} <button onClick={handleFullViewChange}>hide</button></p>
-      <p>{blog.url}</p>
-      <p>likes {blog.likes} <button>like</button></p>
-      <p>{blog.author}</p>
+      <p>{blog.title} <button onClick={handleFullViewChange}>hide</button><br />
+      {blog.url}<br />
+      likes {blog.likes} <button onClick={handleLike}>like</button><br />
+      {blog.author}</p>
     </div>
   )
 }
