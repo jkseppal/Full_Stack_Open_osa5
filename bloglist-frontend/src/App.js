@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
@@ -11,9 +11,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  //const [title, setTitle] = useState('')
+  //const [author, setAuthor] = useState('')
+  //const [url, setUrl] = useState('')
   const [alertMessage, setAlertMessage] = useState(null)
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const App = () => {
     return false
   }
 
-  const handleCreate = async (event) => {
+  /*const handleCreate = async (event) => {
     event.preventDefault()
     const newBlog = {
       title: title,
@@ -75,9 +75,30 @@ const App = () => {
       window.location.reload()
       return false
     }, 5000)
-    //window.location.reload()
-    //return false
+  }*/
+
+  const addBlog = (blogOject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogOject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setAlertMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setTimeout(() => {
+        setAlertMessage(null)
+        //window.location.reload()
+        //return false
+        }, 5000)
+      })
   }
+
+  const blogFormRef = useRef()
+
+  const blogForm = () => (
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
+  )
 
   if (user === null) {
     return (
@@ -118,7 +139,11 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <h2>create new</h2>
+      <div>
+        {blogForm()}
+      </div>
+
+      {/*<h2>create new</h2>
       <form onSubmit={handleCreate}>
         <div>
           title:
@@ -148,7 +173,7 @@ const App = () => {
           />
         </div>
         <button type="submit">create</button>
-      </form>
+      </form>*/}
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
