@@ -3,6 +3,16 @@ import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [fullView, setFullView] = useState(false)
+  
+  const deleteButton = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    const user = JSON.parse(loggedUserJSON)
+    if (blog.user.username === user.username) {
+      return (
+        <button onClick={handleDelete}>remove</button>
+      )
+    }
+  }
 
   const handleFullViewChange = async (event) => {
     event.preventDefault()
@@ -25,7 +35,17 @@ const Blog = ({ blog }) => {
     }
     blogService.update(blog.id, likedBlog)
     window.location.reload()
-    (false)
+    //(false)
+  }
+
+  const handleDelete = async (event) => {
+    event.preventDefault()
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.removal(blog.id)
+      window.location.reload()
+    }
+    //window.location.reload()
+    //(false)
   }
 
   if (fullView === false) {
@@ -40,7 +60,8 @@ const Blog = ({ blog }) => {
       <p>{blog.title} <button onClick={handleFullViewChange}>hide</button><br />
       {blog.url}<br />
       likes {blog.likes} <button onClick={handleLike}>like</button><br />
-      {blog.author}</p>
+      {blog.author}<br />
+      {deleteButton()}</p>
     </div>
   )
 }
