@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [fullView, setFullView] = useState(false)
-  
+
   const deleteButton = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     const user = JSON.parse(loggedUserJSON)
@@ -58,10 +58,10 @@ const Blog = ({ blog }) => {
   return (
     <div>
       <p>{blog.title} <button onClick={handleFullViewChange}>hide</button><br />
-      {blog.url}<br />
-      likes {blog.likes} <button onClick={handleLike}>like</button><br />
-      {blog.author}<br />
-      {deleteButton()}</p>
+        {blog.url}<br />
+        likes {blog.likes} <button onClick={handleLike}>like</button><br />
+        {blog.author}<br />
+        {deleteButton()}</p>
     </div>
   )
 }
