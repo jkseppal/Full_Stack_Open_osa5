@@ -11,9 +11,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  //const [title, setTitle] = useState('')
-  //const [author, setAuthor] = useState('')
-  //const [url, setUrl] = useState('')
   const [alertMessage, setAlertMessage] = useState(null)
 
   useEffect(() => {
@@ -61,22 +58,6 @@ const App = () => {
     return false
   }
 
-  /*const handleCreate = async (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-    blogService.create(newBlog)
-    setAlertMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-    setTimeout(() => {
-      setAlertMessage(null)
-      window.location.reload()
-      return false
-    }, 5000)
-  }*/
-
   const addBlog = (blogOject) => {
     blogFormRef.current.toggleVisibility()
     blogService
@@ -86,11 +67,25 @@ const App = () => {
         setAlertMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
         setTimeout(() => {
           setAlertMessage(null)
-        //window.location.reload()
-        //return false
         }, 5000)
       })
   }
+
+  const updateBlog = (blogObject) => {
+    blogService
+      .update(blogObject.id, blogObject)
+      .then(setBlogs(previousBlogs => previousBlogs.map(blog => blog.id === blogObject.id ? blogObject : blog)))
+  }
+
+  /*const addLike = (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    const likedBlog = { ...blog, likes: ++blog.likes }
+    blogService
+      .update(id, likedBlog)
+      .then((returnedBlog) => {
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+      })
+  }*/
 
   const blogFormRef = useRef()
 
@@ -115,6 +110,7 @@ const App = () => {
           <div>
             username
             <input
+              id='username'
               type="text"
               value={username}
               name="Username"
@@ -124,13 +120,14 @@ const App = () => {
           <div>
             password
             <input
+              id='password'
               type="password"
               value={password}
               name="Password"
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit">login</button>
+          <button id="login-button" type="submit">login</button>
         </form>
       </div>
     )
@@ -142,48 +139,16 @@ const App = () => {
 
       <p>
         {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
+        <button id="logout-button" onClick={handleLogout}>logout</button>
       </p>
 
       <div>
         {blogForm()}
       </div>
 
-      {/*<h2>create new</h2>
-      <form onSubmit={handleCreate}>
-        <div>
-          title:
-            <input
-            type="text"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-            <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-            <input
-              type="text"
-              value={url}
-              name="url"
-              onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>*/}
-
       {blogsByLikes(blogs)}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog addLike={updateBlog} key={blog.id} blog={blog} />
       )}
     </div>
   )

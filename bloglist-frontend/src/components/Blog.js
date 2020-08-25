@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, addLike }) => {
   const [fullView, setFullView] = useState(false)
+  //const [blogi, setBlogi] = useState(null)
 
   const deleteButton = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    const user = JSON.parse(loggedUserJSON)
-    if (blog.user.username === user.username) {
-      return (
-        <button onClick={handleDelete}>remove</button>
-      )
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      if (blog.user.username === user.username) {
+        return (
+          <button id="delete-button" onClick={handleDelete}>remove</button>
+        )
+      }
     }
   }
 
@@ -33,8 +36,11 @@ const Blog = ({ blog }) => {
       likes: (blog.likes + 1),
       id: blog.id
     }
-    blogService.update(blog.id, likedBlog)
-    window.location.reload()
+    //await setBlogi(likedBlog)
+    addLike(likedBlog)
+    //setBlogi(null)
+    //await blogService.update(likedBlog.id, likedBlog)
+    //await window.location.reload()
     //(false)
   }
 
@@ -51,15 +57,15 @@ const Blog = ({ blog }) => {
   if (fullView === false) {
     return (
       <div>
-        {blog.title} {blog.author} <button onClick={handleFullViewChange}>view</button>
+        {blog.title} {blog.author} <button id="view-button" data-testid="view-button" onClick={handleFullViewChange}>view</button>
       </div>
     )
   }
   return (
     <div>
-      <p>{blog.title} <button onClick={handleFullViewChange}>hide</button><br />
+      <p>{blog.title} <button id="hide-button" onClick={handleFullViewChange}>hide</button><br />
         {blog.url}<br />
-        likes {blog.likes} <button onClick={handleLike}>like</button><br />
+        likes {blog.likes} <button id="like-button" data-testid="like-button" onClick={handleLike}>like</button><br />
         {blog.author}<br />
         {deleteButton()}</p>
     </div>
